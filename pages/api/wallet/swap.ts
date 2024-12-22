@@ -74,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.error('Transfer error:', error);
         return res.status(500).json({
             error: "Transfer failed",
-            message: error.message 
+            message: error.message || "Internal server error"
         });
     }
 }
