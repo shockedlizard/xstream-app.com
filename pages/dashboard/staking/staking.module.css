@@ -1,0 +1,220 @@
+.staking {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10px);
+
+    .stakingTitle {
+        font-size: rem(30px);
+        font-weight: 600;
+        color: #fff;
+
+        span {
+            font-size: rem(16px);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+        }
+    }
+
+    .stakingPlatform {
+        padding: rem(20px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        gap: rem(10px);
+        text-align: center;
+        background-color: rgba(41, 41, 41, 0.37);
+
+
+
+        .stakingPlatformButton {
+            width: 100%;
+            height: 40px;
+            color: #fff;
+        }
+
+        /* border-radius: rem(10px); */
+
+        .stakingPlatformContent {
+            .stakingPlatformImage {
+                width: 200px;
+                height: auto;
+            }
+
+            .stakingPlatformName {
+                margin-top: rem(10px);
+                margin-bottom: rem(10px);
+                text-align: left;
+                font-size: rem(16px);
+                font-weight: 600;
+                color: #fff;
+            }
+
+            .stakingPlatformDescription {
+                font-size: rem(16px);
+                font-weight: 600;
+                color: #fff;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+                .stakingPlatformDescriptionTitle {
+                    font-size: rem(16px);
+                    font-weight: 600;
+                    color: rgba(255, 255, 255, 0.5);
+                }
+
+                .stakingPlatformDescriptionValue {
+                    font-size: rem(16px);
+                    font-weight: 600;
+                    color: #fff;
+                }
+            }
+
+        }
+
+    }
+}
+
+.stakingNew {
+    padding: rem(20px);
+}
+
+.stakingLists {
+    padding: rem(20px);
+
+    .stakingListsTitle {
+        font-size: rem(20px);
+        font-weight: 600;
+        color: #fff;
+    }
+}
+
+.stakingInformation {
+    margin-top: rem(20px);
+    padding: rem(20px);
+    background-color: rgba(41, 41, 41, 0.37);
+    width: rem(500px);
+
+    .stakingInformationTitle {
+        font-size: rem(16px);
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .stakingInformationItem {
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: rem(10px);
+    }
+
+    .stakingInformationContent {
+        padding: rem(10px);
+    }
+
+    .stakingInformationItemTitle {
+        font-size: rem(16px);
+        font-weight: 400;
+        color: #ddddddbb;
+    }
+
+    .stakingInformationItemValue {
+        font-size: rem(16px);
+        font-weight: 600;
+        color: #fff;
+
+        .stakingInformationItemValueSymbol {
+            font-size: rem(12px);
+            font-weight: 700;
+            color: #c4c4c4bb;
+        }
+    }
+}
+
+.stakingListsItem {
+    background-color: rgba(41, 41, 41, 0.37);
+    padding: rem(30px);
+
+    .stakingListsItemId {
+        font-size: rem(16px);
+        font-weight: 600;
+        color: #fff;
+        text-transform: uppercase;
+        margin-bottom: rem(10px);
+        padding-bottom: rem(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stakingListsItemTitle {
+        font-size: rem(16px);
+        font-weight: 600;
+        color: #fff;
+        text-transform: uppercase;
+    }
+
+    .stakingListsItemReward {
+        margin-top: rem(15px);
+        font-size: rem(20px);
+        font-weight: 600;
+        color: #fff;
+
+        span {
+            font-size: rem(12px);
+            font-weight: 400;
+            color: #cecece7e;
+        }
+    }
+
+    .stakingListsItemAmount {
+        font-size: rem(16px);
+        font-weight: 600;
+        color: #fff;
+
+        span {
+            font-size: rem(12px);
+            font-weight: 600;
+            color: #cecece7e;
+        }
+    }
+
+    .stakingListsItemRewardInfo {
+        font-size: rem(13px);
+        font-weight: 400;
+        color: #cecece7e;
+        text-transform: uppercase;
+        margin-bottom: rem(20px);
+
+
+    }
+}
+
+.rewardContainer {
+    position: relative;
+    height: 30px;
+}
+
+.stakingListsItemReward {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+.rewardDiff {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    color: #4CAF50;
+    font-size: 0.8em;
+    animation: floatUp 0.8s ease-out forwards;
+    pointer-events: none;
+}

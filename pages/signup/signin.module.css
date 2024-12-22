@@ -1,0 +1,24 @@
+.wrapper {
+    min-height: 100vh;
+    background-size: cover;
+    background-image: url('/images/bg/auth2.jpg');
+  }
+  
+  .form {
+    border-right: 10px solid  rgba(168, 15, 15, 0.651);
+    min-height: 100vh;
+    max-width: 450px;
+    padding-top: 80px;
+    background-color: rgba(0, 0, 0, 0.85);
+  
+    @media (max-width: $mantine-breakpoint-sm) {
+      max-width: 100%;
+    }
+  }
+  
+  .title {
+    color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+    font-family:
+      Greycliff CF,
+      var(--mantine-font-family);
+  }

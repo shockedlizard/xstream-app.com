@@ -1,0 +1,40 @@
+.presale {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10px);
+    
+    .presaleHeader {
+        padding: rem(20px);
+        .presaleTitle {
+            font-size: rem(30px);
+            font-weight: 600;
+            color: #fff;
+        }
+    }
+
+    .presaleBody {
+        padding: rem(20px);
+    }
+
+    .presalePlatform {
+        padding: rem(20px);
+        display: flex;
+        flex-direction: column;
+        gap: rem(10px);
+        text-align: center;
+        height: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+
+
+        .presalePlatformImage {
+            width: 200px;
+            height: auto;
+        }
+
+        .presalePlatformName {
+            font-size: rem(16px);
+            font-weight: 600;
+            color: #fff;
+        }
+    }
+}

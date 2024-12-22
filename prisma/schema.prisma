@@ -1,0 +1,219 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? @db.Text
+    session_state     String?
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    password      String
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+    wallets       Wallet[]
+    swaps         Swap[]
+    supportTickets SupportTicket[]
+    supportReplies TicketReply[]
+    stakings       Staking[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt @default(now())
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+model Wallet {
+    id String @id @default(cuid())
+    address String @unique
+    privateKey String
+    userId String @unique
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    history     WalletHistory[]
+    bnbBalance String
+    xtrBalance String
+    pendingTransfer String?
+    swaps         Swap[]
+}
+
+enum Status {
+    WAITING
+    PENDING
+    SUCCESS
+    FAILED
+}
+
+model WalletHistory {
+    id              String   @id @default(cuid())
+    walletId        String   // Tambah ini
+    blockNumber     BigInt?
+    transactionHash String?
+    from            String
+    to              String
+    value           String
+    wallet          Wallet   @relation(fields: [walletId], references: [address])
+    timestamp       String?
+    date            String?
+    type            String
+    status          Status
+    gas             String?
+    swaps           Swap[]
+}
+
+enum SwapStatus {
+    WAITING
+    PENDING
+    SUCCESS
+    FAILED
+    REJECTED
+}
+
+model Swap {
+    id String @id @default(cuid())
+    userId String
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    walletId String
+    from String
+    to String
+    amount String
+    amountUSDT String
+    network String
+    status SwapStatus
+    walletHistoryId String
+    walletHistory WalletHistory @relation(fields: [walletHistoryId], references: [id])
+    wallet Wallet @relation(fields: [walletId], references: [address])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum TicketPriority {
+    HIGH
+    MEDIUM
+    LOW
+}
+
+enum TicketStatus {
+    OPEN
+    CLOSED
+    PENDING
+}
+
+model SupportTicket {
+    id        String      @id @default(cuid())
+    userId    String
+    subject   String
+    message   String
+    priority  TicketPriority
+    status    TicketStatus
+    replies   TicketReply[]
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @default(now())
+    user      User        @relation(fields: [userId], references: [id])
+}
+
+model TicketReply {
+    id        String      @id @default(cuid())
+    ticketId  String
+    userId    String
+    message   String
+    createdAt DateTime    @default(now())
+    ticket    SupportTicket @relation(fields: [ticketId], references: [id])
+    user      User        @relation(fields: [userId], references: [id])
+}
+
+
+model SiteConfig {
+    id String @id @default(cuid())
+    name String
+    value String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum StakingPackageStatus {
+    ACTIVE
+    INACTIVE
+}
+
+model StakingPackage {
+    id String @id @default(cuid())
+    img String?
+    name String
+    description String
+    stakingDays Int
+    minAmount String
+    maxAmount String
+    dailyReward String
+    status StakingPackageStatus
+    popular Boolean @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    stakings Staking[]
+}
+
+
+enum StakingStatus {
+    WAITING
+    PENDING
+    RUNNING
+    CANCELLED
+}
+
+model Staking {
+    id String @id @default(cuid())
+    userId String
+    user User @relation(fields: [userId], references: [id])
+    packageId String
+    package StakingPackage @relation(fields: [packageId], references: [id])
+    amount String
+    status StakingStatus
+    canceledDate DateTime?
+    lastRewardDate DateTime?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

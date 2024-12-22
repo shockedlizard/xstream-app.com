@@ -1,0 +1,13 @@
+.referral {
+
+    .referralBox {
+        padding: rem(20px);
+    }
+
+    .referralTabs {
+        padding: rem(20px);
+    }
+    .referralBody {
+        padding: rem(20px);
+    }
+}

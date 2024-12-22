@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+
+    .header {
+       padding: 16px;
+    }
+
+    .reply {
+        padding: 16px;
+        .replyCard {
+            background-color: var(--mantine-color-gray-9);
+        }
+    }
+}
+
