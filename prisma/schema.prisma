@@ -31,6 +31,7 @@ model Account {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
+    @@map("account")
 }
 
 model Session {
@@ -39,6 +40,8 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("session")
 }
 
 model User {
@@ -57,6 +60,8 @@ model User {
     stakings       Staking[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt @default(now())
+
+    @@map("user")
 }
 
 model VerificationToken {
@@ -102,6 +107,8 @@ model WalletHistory {
     status          Status
     gas             String?
     swaps           Swap[]
+
+    @@map("wallethistory")
 }
 
 enum SwapStatus {
@@ -128,6 +135,8 @@ model Swap {
     wallet Wallet @relation(fields: [walletId], references: [address])
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("swap")
 }
 
 enum TicketPriority {
@@ -153,6 +162,8 @@ model SupportTicket {
     createdAt DateTime    @default(now())
     updatedAt DateTime    @default(now())
     user      User        @relation(fields: [userId], references: [id])
+
+    @@map("supportticket")
 }
 
 model TicketReply {
@@ -163,6 +174,8 @@ model TicketReply {
     createdAt DateTime    @default(now())
     ticket    SupportTicket @relation(fields: [ticketId], references: [id])
     user      User        @relation(fields: [userId], references: [id])
+
+    @@map("ticketreply")
 }
 
 
@@ -172,6 +185,8 @@ model SiteConfig {
     value String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("siteconfig")
 }
 
 enum StakingPackageStatus {
@@ -194,6 +209,8 @@ model StakingPackage {
     updatedAt DateTime @updatedAt
 
     stakings Staking[]
+
+    @@map("stakingpackage")
 }
 
 
@@ -216,4 +233,6 @@ model Staking {
     lastRewardDate DateTime?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@map("staking")
 }
