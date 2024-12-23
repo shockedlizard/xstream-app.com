@@ -13,13 +13,15 @@ import {
     Text,
     Stack,
     Tabs,
-    Box
+    Box,
+    ScrollArea
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import styles from './support.module.css'
-import { IconSend } from '@tabler/icons-react';
+import { IconMessageCircle, IconPlus, IconSend } from '@tabler/icons-react';
 import Link from 'next/link';
+import HeaderNav from '@/components/dashboard/headerNav';
 
 interface Ticket {
     id: string;
@@ -33,10 +35,7 @@ interface Ticket {
 
 const Support = () => {
     const [tickets, setTickets] = useState<Ticket[]>([]);
-    const [opened, { open, close }] = useDisclosure(false);
-
-    const [activeTab, setActiveTab] = useState('tickets');
-
+    const [activeTab, setActiveTab] = useState('Tickets');
     // Fetch tickets
     const fetchTickets = async () => {
         try {
@@ -51,28 +50,23 @@ const Support = () => {
             });
         }
     };
+
+    const navList = [
+        { label: 'Tickets', icon: <IconMessageCircle size={16} />, url: "", type: 'tab' },
+        { label: 'Create Ticket', icon: <IconPlus size={16} />, url: "", type: 'tab' }
+    ]
+
     useEffect(() => {
         fetchTickets();
     }, []);
-    
-    // Create ticket
 
     return (
         <Stack gap="xl">
             <div className={styles.support}>
-                <Box className={styles.supportBoxHeader}>
-                    <Title className={styles.supportTitle}>Support</Title>
-                </Box>
-                <Tabs value={activeTab} onChange={(value) => setActiveTab(value || 'change-password')} color='red'>
-                    <Tabs.List px={20}>
-                        <Tabs.Tab value="tickets" fz={20}>Tickets</Tabs.Tab>
-                        <Tabs.Tab value="new-ticket" fz={20}>Create Ticket</Tabs.Tab>
-                    </Tabs.List>
-                </Tabs>
-
+                <HeaderNav title='Support' navList={navList} setTab={setActiveTab} tab={activeTab} />
                 <div className={styles.supportBody}>
-                    {activeTab === 'tickets' && <Tickets tickets={tickets} />}
-                    {activeTab === 'new-ticket' && <NewTicket fetchTickets={fetchTickets}  setActiveTab={setActiveTab}/>}
+                    {activeTab === 'Tickets' && <Tickets tickets={tickets} />}
+                    {activeTab === 'Create Ticket' && <NewTicket fetchTickets={fetchTickets} setActiveTab={setActiveTab} />}
                 </div>
             </div>
         </Stack>
@@ -99,42 +93,44 @@ const Tickets = ({ tickets }: { tickets: Ticket[] }) => {
         }
     };
     return (<div>
-        <Table>
-            <Table.Thead>
-                <Table.Tr>
-                    <Table.Th>Subject</Table.Th>
-                    <Table.Th>Priority</Table.Th>
-                    <Table.Th>Status</Table.Th>
-                    <Table.Th>Created</Table.Th>
-                    <Table.Th>Actions</Table.Th>
-                </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-                {tickets.map((ticket) => (
-                    <Table.Tr key={ticket.id}>
-                        <Table.Td>{ticket.subject}</Table.Td>
-                        <Table.Td>
-                            <Badge color={getPriorityColor(ticket.priority)}>
-                                {ticket.priority}
-                            </Badge>
-                        </Table.Td>
-                        <Table.Td>
-                            <Badge color={getStatusColor(ticket.status)}>
-                                {ticket.status}
-                            </Badge>
-                        </Table.Td>
-                        <Table.Td>{new Date(ticket.createdAt).toLocaleDateString()}</Table.Td>
-                        <Table.Td>
-                            <Link href={`/dashboard/support/detail/${ticket.id}`}>
-                                <Button variant="subtle" size="xs">
-                                    View Details
-                                </Button>
-                            </Link>
-                        </Table.Td>
+        <ScrollArea h={500}>
+            <Table>
+                <Table.Thead>
+                    <Table.Tr>
+                        <Table.Th>Subject</Table.Th>
+                        <Table.Th>Priority</Table.Th>
+                        <Table.Th>Status</Table.Th>
+                        <Table.Th>Created</Table.Th>
+                        <Table.Th>Actions</Table.Th>
                     </Table.Tr>
-                ))}
-            </Table.Tbody>
-        </Table>
+                </Table.Thead>
+                <Table.Tbody>
+                    {tickets.map((ticket) => (
+                        <Table.Tr key={ticket.id}>
+                            <Table.Td>{ticket.subject}</Table.Td>
+                            <Table.Td>
+                                <Badge color={getPriorityColor(ticket.priority)}>
+                                    {ticket.priority}
+                                </Badge>
+                            </Table.Td>
+                            <Table.Td>
+                                <Badge color={getStatusColor(ticket.status)}>
+                                    {ticket.status}
+                                </Badge>
+                            </Table.Td>
+                            <Table.Td>{new Date(ticket.createdAt).toLocaleDateString()}</Table.Td>
+                            <Table.Td>
+                                <Link href={`/dashboard/support/detail/${ticket.id}`}>
+                                    <Button variant="subtle" size="xs">
+                                        View Details
+                                    </Button>
+                                </Link>
+                            </Table.Td>
+                        </Table.Tr>
+                    ))}
+                </Table.Tbody>
+            </Table>
+        </ScrollArea>
     </div>
     );
 };

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import styles from './wallet.module.css'
-import { Box, Group, Text, Button, ActionIcon, Table, Title, Divider, CopyButton, Loader, Center, ThemeIcon, TextInput, Space, NumberInput, Badge, Select } from '@mantine/core'
+import { Box, Group, Text, Button, ActionIcon, Table, Title, Divider, CopyButton, Loader, Center, ThemeIcon, TextInput, Space, NumberInput, Badge, Select, ScrollArea } from '@mantine/core'
 import { IconArrowDown, IconArrowLeft, IconArrowRight, IconArrowsExchange2, IconArrowUp, IconBolt, IconBoltFilled, IconCheck, IconClock, IconCopy, IconHistory, IconProgressBolt, IconQrcode } from '@tabler/icons-react'
 import axios from 'axios'
 import { formatNumber, timeAgo, truncateText, validateAddress } from '@/components/function'
 import { useForm } from '@mantine/form'
+import WalletPageHeader from '@/components/dashboard/wallet/header'
 interface History {
     id: string;
     walletId: string;
@@ -56,52 +57,9 @@ const WalletPage = () => {
         setActiveMenu(menu)
     }
 
-    const Loading = () => {
-        return (
-            <Text className={styles.walletLoading}>
-                Please wait...
-            </Text>
-        )
-    }
-
     return (
         <div className={styles.walletPage}>
-            <Box className={styles.walletPageBox}>
-                {/* <Text className={styles.WalletTitle}>Avaliable Balance</Text> */}
-                <Box className={styles.walletBalance}>
-                    <Group justify="center" gap="xs" align="flex-end">
-                        <Text className={styles.WalletValue}>{loading ? "loading..." : formatNumber(xtrBalance - pendingTransfer)} <span>XTR</span></Text>
-                    </Group>
-                    {pendingTransfer > 0 && (
-                        <Group justify="center" gap={5}>
-                            <Text fw={500} fz={14}>Pending Transaction</Text>
-                            <ThemeIcon size="xs" color="red" variant="transparent">
-                                <IconClock />
-                            </ThemeIcon>
-                            <Text fw={500} fz={14} c="orange">- {pendingTransfer} XTR</Text>
-                        </Group>
-                    )}
-                </Box>
-                <Group justify="center" gap="xs">
-                    <Text className={styles.walletAddress}>{address}</Text>
-                    <CopyButton value={address}>
-                        {({ copied, copy }) => (
-                            <ActionIcon variant="transparent" color="red" size="xs" onClick={copy}>
-                                {copied ? <IconCheck /> : <IconCopy />}
-                            </ActionIcon>
-                        )}
-                    </CopyButton>
-                    <ActionIcon variant="transparent" color="red" size="xs">
-                        <IconQrcode />
-                    </ActionIcon>
-                </Group>
-                <Group justify="center" gap="xs">
-                    <Button color="red" leftSection={<IconHistory />} onClick={() => setActiveMenu("history")} variant={activeMenu === "history" ? "filled" : "outline"}>History</Button>
-                    <Button color="red" leftSection={<IconArrowUp />} onClick={() => setActiveMenu("withdraw")} variant={activeMenu === "withdraw" ? "filled" : "outline"}>Transfer</Button>
-                    <Button color="red" leftSection={<IconArrowsExchange2 />} onClick={() => setActiveMenu("swap")} variant={activeMenu === "swap" ? "filled" : "outline"}>Swap</Button>
-                </Group>
-            </Box>
-
+            <WalletPageHeader setActiveMenu={setActiveMenu} activeMenu={activeMenu} loading={loading} xtrBalance={xtrBalance} address={address} pendingTransfer={pendingTransfer} />
             {activeMenu === "history" && <History xtrHistory={xtrHistory} loading={loading} />}
             {activeMenu === "withdraw" && <Withdraw balance={xtrBalance} reload={setActiveMenu} />}
             {activeMenu === "swap" && <Swap balance={xtrBalance} reload={setActiveMenu} />}
@@ -129,10 +87,11 @@ const History = ({ xtrHistory, loading }: { xtrHistory: History[], loading: bool
         <div className={styles.history}>
             <Title className={styles.historyTitle}>History</Title>
             <Divider />
-            <Table>
-                <Table.Thead>
-                    <Table.Tr>
-                        <Table.Th>Transaction Hash</Table.Th>
+            <ScrollArea h={500}>
+                <Table>
+                    <Table.Thead>
+                        <Table.Tr>
+                        <Table.Th>Tx Hash</Table.Th>
                         <Table.Th>Method</Table.Th>
                         <Table.Th>Block</Table.Th>
                         <Table.Th>Age</Table.Th>
@@ -143,8 +102,9 @@ const History = ({ xtrHistory, loading }: { xtrHistory: History[], loading: bool
                 </Table.Thead>
                 <Table.Tbody>
                     {loading ? <Loading /> : row}
-                </Table.Tbody>
-            </Table>
+                    </Table.Tbody>
+                </Table>
+            </ScrollArea>
         </div>
     )
 }
@@ -334,7 +294,7 @@ const Swap = ({ balance, reload }: { balance: number, reload: (menu: string) => 
                 <Text mt="md">Received USDT: {usdtAmount.toFixed(2)} USDT</Text>
 
                 <Button
-                    type="submit" 
+                    type="submit"
                     mt="md"
                     leftSection={<IconArrowsExchange2 />}
                     onClick={handleSwap}

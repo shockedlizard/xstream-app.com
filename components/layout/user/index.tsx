@@ -1,17 +1,21 @@
-import { AppShell, Burger } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { ActionIcon, AppShell, Burger, SimpleGrid } from '@mantine/core';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import Sidebar from './sidebar';
 import classes from './layout.module.css';
 import { useSession } from 'next-auth/react';
 import { redirect, useRouter } from 'next/navigation';
+import { IconDashboard, IconSettings, IconRocket, IconWallet, IconMenu2, IconChevronRight } from '@tabler/icons-react';
+import { Text } from '@mantine/core';
+import Footer from './footer';
 
 const UserLayout = ({ children }: { children: React.ReactNode }) => {
   const [opened, { toggle }] = useDisclosure();
   const router = useRouter();
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
-  const { data: session, status } = useSession(); 
+  const { data: session, status } = useSession();
   if (status === 'loading') return <div>Loading...</div>;
-  if (!session) router.push('/signin')  ;
+  if (!session) router.push('/signin');
 
 
   return (
@@ -21,17 +25,24 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
         breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
+      footer={{
+        height: isMobile ? 80 : 0,
+      }}
       padding={0}
       classNames={{
         main: classes.main,
         navbar: classes.navbar,
       }}
     >
-      <AppShell.Navbar p="md">  
+      <AppShell.Navbar p="md">
         <Sidebar />
       </AppShell.Navbar>
-
       <AppShell.Main>{children}</AppShell.Main>
+      {isMobile &&
+        <AppShell.Footer>
+          <Footer />
+        </AppShell.Footer>
+      }
     </AppShell>
   );
 }

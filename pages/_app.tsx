@@ -13,7 +13,13 @@ import AuthLayout from '@/components/layout/auth';
 import { SessionProvider } from "next-auth/react"
 
 const theme = createTheme({
-  /** Put your mantine theme override here */
+  breakpoints: {
+    xs: '36em',     // 576px
+    sm: '48em',     // 768px
+    md: '62em',     // 992px
+    lg: '75em',     // 1200px
+    xl: '88em'      // 1408px
+  }
 });
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -21,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const Layout = router.pathname.startsWith('/dashboard') ? UserLayout : router.pathname.startsWith('/signin') || router.pathname.startsWith('/signup') || router.pathname.startsWith('/forgot-password') ? AuthLayout : FrontPageLayout;
   return (
     <SessionProvider session={pageProps.session}>
-      <MantineProvider theme={theme}>
+      <MantineProvider theme={theme} defaultColorScheme="dark">
         <Layout>
           <Component {...pageProps} />
         </Layout>

@@ -44,6 +44,8 @@ const SignInPage = () => {
             router.push("/dashboard"); // Gunakan router.push untuk redirect
         } else {
             // Handle error tanpa memanggil signIn lagi
+            form.setErrors({ email: "user name or password incorrect" });
+            form.setErrors({ password: "user name or password incorrect" });
             console.error(result?.error);
         }
         setLoading(false);

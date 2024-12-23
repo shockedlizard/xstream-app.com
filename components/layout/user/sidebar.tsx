@@ -4,6 +4,7 @@ import classes from './sidebar.module.css'
 import { IconDashboard, IconDots, IconDotsVertical, IconLink, IconLock, IconLockDollar, IconLogout, IconMessageCircle, IconPackage, IconRocket, IconSettings, IconUser, IconWallet } from '@tabler/icons-react'
 import Link from 'next/link'
 import { signOut } from 'next-auth/react'
+import router from 'next/router'
 
 const Sidebar = () => {
 
@@ -20,17 +21,26 @@ const Sidebar = () => {
         { label: 'Settings', icon: <IconSettings size={30} />, link: '/dashboard/settings' },
         { label: 'Profile', icon: <IconUser size={30} />, link: '/dashboard/profile' },
         { label: 'Support', icon: <IconMessageCircle size={30} />, link: '/dashboard/support' },
-        
+
     ]
 
     const links = navigation.map((item) => (
-        <Link className={classes.link} href={item.link} key={item.label}>
+        <Link className={classes.link} href={item.link} key={item.label}
+            onClick={
+                (e) => {
+                    e.preventDefault();
+                    router.push(item.link);
+                }}>
             {item.icon}
             <span>{item.label}</span>
         </Link>
     ))
     const SettingsLinks = settings.map((item) => (
-        <Link className={classes.link} href={item.link} key={item.label}>
+        <Link className={classes.link} href={item.link} key={item.label}
+            onClick={(e) => {
+                e.preventDefault();
+                router.push(item.link);
+            }}>
             {item.icon}
             <span>{item.label}</span>
         </Link>

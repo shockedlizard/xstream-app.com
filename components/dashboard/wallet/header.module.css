@@ -1,0 +1,86 @@
+.container {
+    .header {
+        height: rem(300px);
+        padding: rem(20px);
+        border-bottom: rem(2px) solid rgb(7, 38, 105);
+        box-shadow: 0 0 20px 0 rgba(170, 9, 9, 0.363);
+
+        .balance {
+            width: 100%;
+            text-align: center;
+
+            .balanceTextContainer {
+                height: 70px;
+                width: auto;
+
+                .balanceText {
+                    font-size: rem(48px);
+                    font-weight: 700;
+                }
+            }
+
+            .balanceTextInfo {
+                font-size: rem(16px);
+                font-weight: 600;
+                color: #a8a8a8;
+            }
+
+            .balanceTextPending {
+                font-size: rem(14px);
+                font-weight: 600;
+                color: #8b8b8b;
+
+                span {
+                    font-weight: 700;
+                }
+
+                .balanceTextPendingValueNegative {
+                    color: #e24f4f;
+                }
+
+                .balanceTextPendingValuePositive {
+                    color: #175f17;
+                }
+            }
+
+            margin-bottom: rem(40px);
+
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .button {
+                font-size: 12px !important;
+                padding: 8px 16px !important;
+                @media (max-width: 768px) {
+                    font-size: 10px !important;
+                    padding: 8px 16px !important;
+                }
+            }
+        }
+
+        .walletAddress {
+            margin-top: rem(20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .walletAddressText {
+                padding-right: rem(15px);
+                font-size: rem(16px);
+                font-weight: 600;
+                color: #a8a8a8;
+            }
+        }
+
+        .body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #175f17;
+        }
+    }
+}

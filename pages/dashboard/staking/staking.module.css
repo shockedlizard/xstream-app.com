@@ -92,12 +92,13 @@
     margin-top: rem(20px);
     padding: rem(20px);
     background-color: rgba(41, 41, 41, 0.37);
-    width: rem(500px);
+    width: 100%;
 
     .stakingInformationTitle {
         font-size: rem(16px);
         font-weight: 600;
         color: #fff;
+        width: 100%;
     }
 
     .stakingInformationItem {
@@ -217,4 +218,15 @@
     font-size: 0.8em;
     animation: floatUp 0.8s ease-out forwards;
     pointer-events: none;
+}
+
+.noStakingFound {
+    text-align: center;
+    margin-top: rem(20px);
+    color: #fff;
+    font-size: rem(16px);
+    max-width: 500px;
+    height: 100%;
+    background-color: rgba(41, 41, 41, 0.37);
+    padding: rem(20px);
 }

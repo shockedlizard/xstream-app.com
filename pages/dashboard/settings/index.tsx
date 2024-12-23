@@ -1,23 +1,21 @@
 import React, { useState } from 'react'
 import styles from './settings.module.css'
 import { Box, Button, PasswordInput, Title, Tabs } from '@mantine/core'
-import { IconLock } from '@tabler/icons-react'
+import { IconBell, IconLock } from '@tabler/icons-react'
+import HeaderNav from '@/components/dashboard/headerNav'
 
 const Referral = () => {
-  const [activeTab, setActiveTab] = useState('change-password');
+  const [activeTab, setActiveTab] = useState('Change Password');
+  const navList = [
+    { label: 'Change Password', icon: <IconLock size={16} />, url: "", type: 'tab' },
+    { label: 'Notifications', icon: <IconBell size={16} />, url: "", type: 'tab' }
+  ]
   return (
     <div className={styles.settings}>
-      <Box className={styles.settingsBoxHeader}>
-        <Title className={styles.settingsTitle}>Settings</Title>
-      </Box>
-      <div className={styles.settingBoxBody}>
-      <Tabs value={activeTab} onChange={(value) => setActiveTab(value || 'change-password')} color='red'>
-        <Tabs.List px={20}>
-          <Tabs.Tab value="change-password" fz={20}>Change Password</Tabs.Tab>
-          <Tabs.Tab value="notifications" fz={20}>Notifications</Tabs.Tab>
-        </Tabs.List>
-      </Tabs>
-      {activeTab === 'change-password' && <ChangePassword />}
+      <HeaderNav title='Settings' navList={navList} setTab={setActiveTab} tab={activeTab} />
+      <div className={styles.settingBoxBody}>   
+      {activeTab === 'Change Password' && <ChangePassword />}
+      {activeTab === 'Notifications' && <Notifications />}
       </div>
     </div>
   )
@@ -37,3 +35,10 @@ const ChangePassword = () => {
     </div>
   )
 }
+
+const Notifications = () => {
+  return (
+    <div>Notifications</div>
+  )
+}
+

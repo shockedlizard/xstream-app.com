@@ -1,9 +1,10 @@
-import { Image, SimpleGrid, Title, Text, Center, Button, Group, Box, Divider, Badge, Tabs, NumberInput } from '@mantine/core'
+import { Image, SimpleGrid, Title, Text, Center, Button, Group, Box, Divider, Badge, Tabs, NumberInput, ThemeIcon, ActionIcon } from '@mantine/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import styles from './staking.module.css'
-import { IconArrowRight, IconBolt, IconBoltFilled, IconCheck, IconChevronRight, IconClock, IconHourglass, IconReload, IconStar, IconX } from '@tabler/icons-react'
+import { IconArrowRight, IconBolt, IconBoltFilled, IconCheck, IconChevronRight, IconClock, IconHourglass, IconList, IconPlus, IconReload, IconStar, IconX } from '@tabler/icons-react'
 import axios from 'axios'
 import { Status } from '@prisma/client'
+import HeaderNav from '@/components/dashboard/headerNav'
 
 
 const StakingPlatform = [
@@ -34,20 +35,16 @@ const StakingPlatform = [
 ]
 
 const Staking = () => {
-    const [tab, setTab] = useState("lists")
+    const [tab, setTab] = useState("Staking Lists")
+    const navList = [
+        { label: 'Staking Lists', icon: <IconList size={16} />, url: "", type: 'tab' },
+        { label: 'New Staking', icon: <IconPlus size={16} />, url: "", type: 'tab' }
+    ]
     return (
         <div className={styles.staking}>
-            <Group justify="space-between" align="center" p={20}>
-                <Title className={styles.stakingTitle}>Staking <span> <IconChevronRight size={16} /> {tab === "lists" ? "Active" : "History"}</span></Title>
-            </Group>
-            <Tabs value={tab} onChange={(value) => setTab(value || 'referral')} color='red'>
-                <Tabs.List px={20}>
-                    <Tabs.Tab value="lists" fz={20}>Staking Lists</Tabs.Tab>
-                    <Tabs.Tab value="new" fz={20}>New Staking</Tabs.Tab>
-                </Tabs.List>
-            </Tabs>
-            {tab === "lists" && <StakingLists />}
-            {tab === "new" && <StakingNew setTab={setTab} />}
+            <HeaderNav title='Staking' navList={navList} setTab={setTab} tab={tab} />
+            {tab === "Staking Lists" && <StakingLists setTab={setTab} />}
+            {tab === "New Staking" && <StakingNew setTab={setTab} />}
 
         </div>
     )
@@ -86,7 +83,7 @@ interface Staking {
     lastRewardDate: string | null
 }
 
-const StakingLists = () => {
+const StakingLists = ({ setTab }: { setTab: (tab: string) => void }) => {
     const [staking, setStaking] = useState<Staking[]>([])
     const [loading, setLoading] = useState(false)
 
@@ -130,15 +127,13 @@ const StakingLists = () => {
     return (
         <div className={styles.stakingLists}>
             <Title className={styles.stakingListsTitle}>Staking Lists</Title>
-            <SimpleGrid cols={3} pt={20}>
+
+            {staking.length === 0 && <NoStakingFound setTab={setTab} />}
+            <SimpleGrid cols={{base: 1, sm: 2, md: 3}} pt={20}>
                 {staking.map((item, index) => {
-
                     const status = item?.status === 'WAITING' ? 'WAITING' : item?.status === 'PENDING' ? 'PENDING' : item?.status === 'RUNNING' ? 'RUNNING' : 'CANCELLED';
-
                     const statusColor = item?.status === 'WAITING' ? 'yellow' : item?.status === 'PENDING' ? 'yellow' : item?.status === 'RUNNING' ? 'yellow' : 'red';
-
                     const icon = item?.status === 'WAITING' ? <IconClock size={16} /> : item?.status === 'PENDING' ? <IconClock size={16} /> : item?.status === 'RUNNING' ? <IconBoltFilled size={16} /> : <IconX size={16} />;
-
                     const startDate = new Date(item?.createdAt);
                     const formattedStartDate = startDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
                     const dailyReward = item?.package?.dailyReward;
@@ -204,6 +199,7 @@ const StakingNew = ({ setTab }: { setTab: (tab: string) => void }) => {
     const [stakingPackage, setStakingPackage] = useState<StakingPackage[]>([])
     const [loading, setLoading] = useState(false)
     const [amount, setAmount] = useState(0);
+    const [error, setError] = useState<string | null>(null)
 
     const selectedPackage = stakingPackage.find((item) => Number(item.minAmount) <= amount && Number(item.maxAmount) >= amount)
 
@@ -229,8 +225,9 @@ const StakingNew = ({ setTab }: { setTab: (tab: string) => void }) => {
             const response = await axios.post('/api/staking', { packageId: selectedPackage.id, amount })
             console.log(response)
             setTab('lists')
-        } catch (error) {
-            console.error('Stake error:', error)
+        } catch (error:any) {
+            setError(error.response.data.error)
+            // console.error('Stake error:', error)
         } finally {
             setLoading(false)
         }
@@ -243,12 +240,16 @@ const StakingNew = ({ setTab }: { setTab: (tab: string) => void }) => {
                 label="Amount"
                 size="lg"
                 value={amount}
-                onChange={(value: string | number) => setAmount(Number(value))}
+                onChange={(value: string | number) => {
+                    setAmount(Number(value))
+                    setError(null)
+                }}
                 placeholder="Enter amount"
                 min={100}
                 max={1000000}
-                step={100}
+                step={100} 
                 maw={500}
+                error={error}
             />
             <Box className={styles.stakingInformation}>
                 {!selectedPackage ?
@@ -282,7 +283,7 @@ const StakingNew = ({ setTab }: { setTab: (tab: string) => void }) => {
                             {selectedPackage && <Text className={styles.stakingInformationItemValue}>{formatNumber((Number(selectedPackage?.dailyReward) / 100) * amount * 365)} <span className={styles.stakingInformationItemValueSymbol}>XTR</span></Text>}
                         </Group>
                         <Group justify="flex-end" align="center" className={styles.stakingInformationButton}>
-                            <Button mt="xl" className={styles.stakingInformationButton} leftSection={<IconArrowRight />} color="red" onClick={handleStake}>Stake Now</Button>
+                            <Button loading={loading} mt="xl" className={styles.stakingInformationButton} leftSection={<IconArrowRight />} color="red" onClick={handleStake}>Stake Now</Button>
                         </Group>
                     </>
                 }
@@ -348,3 +349,18 @@ const CurrentReward = ({ rewards, prevRewards, item }: {
         </>
     );
 };
+
+const NoStakingFound = ({ setTab }: { setTab: (tab: string) => void }) => {
+    return (
+        <div className={styles.noStakingFound}>
+            <Text className={styles.noStakingFoundTitle}>No Staking Found</Text>
+            <Text className={styles.noStakingFoundSubtitle}>You have not staked any amount yet</Text>
+            <Center mt="xl">
+                <ActionIcon radius="xl" size="xl" color="red" onClick={() => setTab('New Staking')}>
+                    <IconPlus />
+                </ActionIcon>
+            </Center>
+            <Text ta="center" className={styles.noStakingFoundSubtitle} mt="xs">Add Staking</Text>
+        </div>
+    )
+}

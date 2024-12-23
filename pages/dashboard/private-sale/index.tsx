@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { SimpleGrid, Text, Group, Badge, Center, Container, TextInput, Button, Title, SegmentedControl, Select, Grid, NumberInput, Divider, rem, Checkbox, Table, Menu, ActionIcon, Tabs } from '@mantine/core'
 import classes from './private-sale.module.css'
-import { IconArrowLeftRight, IconArrowsExchange, IconChevronRight, IconDotsVertical, IconFlameFilled, IconTrash } from '@tabler/icons-react'
+import { IconArrowLeftRight, IconArrowsExchange, IconChevronRight, IconDotsVertical, IconFlameFilled, IconHistory, IconList, IconTrash } from '@tabler/icons-react'
+import HeaderNav from '@/components/dashboard/headerNav'
 
 
 const PrivateSale = () => {
@@ -9,31 +10,31 @@ const PrivateSale = () => {
     const [currentPrice, setCurrentPrice] = useState(0.0625)
     const [swapValue, setSwapValue] = useState(0.0625)
     const [swapPercentage, setSwapPercentage] = useState(0.7)
-    const [tab, setTab] = useState('order')
+    const [tab, setTab] = useState('Order')
 
     const data = [
         { id: 1, title: "Current price", value: currentPrice, symbol: "USDT" },
         { id: 2, title: "Swap Value", value: currentPrice * swapPercentage, symbol: "USDT" },
         { id: 3, title: "Swap Percentage", value: swapPercentage, symbol: "%" },
     ]
+
+    const navList = [
+        { label: 'Order', icon: <IconList size={16} />, url: "", type: 'tab' },
+        { label: 'History', icon: <IconHistory size={16} />, url: "", type: 'tab' }
+    ]   
+
+    console.log(tab);
+    
     return (
         <div className={classes.container}>
-            <div className={classes.header}>
-                <Title order={3} className={classes.tabHeader}>Private Sale <span><IconChevronRight size={16} />{tab === 'order' ? 'Order' : 'History'}</span></Title>
-            </div>
-            <Tabs value={tab} onChange={(value) => setTab(value || 'referral')} color='red'>
-                <Tabs.List px={20}>
-                    <Tabs.Tab value="order" fz={20}>Order</Tabs.Tab>
-                    <Tabs.Tab value="history" fz={20}>History</Tabs.Tab>
-                </Tabs.List>
-            </Tabs>
+            <HeaderNav title='Private Sale' navList={navList} setTab={setTab} tab={tab}/>
             <div className={classes.body}>
-                {tab === 'order' ?
+                {tab === 'Order' ?
                     <Grid>
-                        <Grid.Col span={6}>
+                        <Grid.Col span={{ base: 12, md: 6 }}>
                             <Order currentPrice={currentPrice} />
                         </Grid.Col>
-                        <Grid.Col span={6}>
+                        <Grid.Col span={{ base: 12, md: 6 }}>
                             <div className={classes.header}>
                                 <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} className={classes.grid} w="100%">
                                     {data.map((item, index) => (

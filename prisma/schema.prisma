@@ -51,6 +51,8 @@ model User {
     emailVerified DateTime?
     password      String
     image         String?
+    sponsor       String? 
+    address       String?
     accounts      Account[]
     sessions      Session[]
     wallets       Wallet[]
@@ -58,6 +60,11 @@ model User {
     supportTickets SupportTicket[]
     supportReplies TicketReply[]
     stakings       Staking[]
+    
+    downlines     UserGenerasi[] @relation("UserDownlines")
+    upline        UserGenerasi[] @relation("UserUpline")
+   
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt @default(now())
 
@@ -238,4 +245,16 @@ model Staking {
     updatedAt DateTime @updatedAt
 
     @@map("staking")
+}
+
+model UserGenerasi {
+   id          String   @id @default(cuid())
+   userId      String
+   user        User     @relation("UserUpline", fields: [userId], references: [id])
+   sponsorId   String
+   sponsor     User     @relation("UserDownlines", fields: [sponsorId], references: [id])
+   generasi    Int
+   createdAt   DateTime @default(now())
+   updatedAt   DateTime @updatedAt
+    @@map("usergenerasi")
 }

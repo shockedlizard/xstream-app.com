@@ -1,7 +1,7 @@
 .header {
     border-bottom: 1px solid rgba(168, 13, 13, 0.425);
     height: 100px;
-    display: flex;
+    display: flex; 
     align-items: center;
     justify-content: center;
 
@@ -13,6 +13,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        
     }
 
     .menuItem {
@@ -24,11 +25,46 @@
         font-weight: 600;
         transition: all 0.3s ease;
         text-transform: uppercase;
+        cursor: pointer;
 
         &:hover {
+            color: white;
+        }
+
+        &.active {
             color: white;
         }
     }
 
     background-color: #000000;
 }
+
+@media (max-width: 768px) {
+    .hideXs {
+        display: none;
+    }
+}
+
+
+.mobileMenu {
+    padding: rem(100px) rem(20px);
+    overflow-x: hidden !important;
+    background-color: #000000;
+    min-height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+
+    .menuList {
+        padding: 20px;
+        .menuItem {
+            padding: 10px 0;
+            font-size: rem(16px);
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+    }
+}
+

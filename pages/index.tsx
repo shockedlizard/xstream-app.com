@@ -1,16 +1,53 @@
 import { Container, SimpleGrid, Text, Image, Center, Grid, Box, rem } from '@mantine/core'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
 import { PieChart } from '@mantine/charts'
+import Header from '@/components/layout/frontpage/header'
 
 const Index = () => {
+
+  const [section, setSection] = useState<string>("home");
+  useEffect(() => {
+    const element = document.getElementById(section);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, [section]);
+
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+
   return (
     <div>
-      <Banner />
-      <Features />
-      <HowToPlay />
-      <InovativePlatform />
-      <Tokenomics />
+      <div className={`${styles.header} ${isScrolled ? styles.headerScrolled : ''}`}>
+        <Header section={section} setSection={setSection} />
+      </div>
+      <div id="Home">
+        <Banner />
+        <Features />
+      </div>
+      <div id="Features">
+        <HowToPlay />
+      </div>
+      <div id="inovative-platform">
+        <InovativePlatform />
+      </div>
+      <div id="Tokenomics">
+        <Tokenomics />
+      </div>
+      <div id="Roadmap">
+        <Roadmap />
+      </div>
     </div>
   )
 }
@@ -22,7 +59,7 @@ const Banner = () => {
     <div className={styles.banner}>
       <Container size="xl" className={styles.bannerContainer}>
         <div className={styles.bannerContent}>
-          <Image src="/images/xstream-logo.png" alt="Xstream" className={styles.bannerLogo} w={300} h="auto" />
+          <Image src="/images/xstream-logo.png" alt="Xstream" className={styles.bannerLogo} />
           <Text className={styles.bannerSubtitle}>Solusi Cerdas Bisnis Online di Era 5.0</Text>
           <Text className={styles.bannerButton}>Mulai Investasi Anda Hari Ini!</Text>
         </div>
@@ -80,12 +117,12 @@ const HowToPlay = () => {
     <div className={styles.howToPlay}>
       <Container size="xl" className={styles.howToPlayContainer}>
         <Grid>
-          <Grid.Col span={4}>
+          <Grid.Col span={{ base: 12, md: 4 }}>
             <div className={styles.howToPlayImageContainer}>
               <Image src="/images/how-toplay.jpeg" alt="How to Play" className={styles.howToPlayImage} />
             </div>
           </Grid.Col>
-          <Grid.Col span={8}>
+          <Grid.Col span={{ base: 12, md: 8 }}>
             <div className={styles.howToPlayContent}>
               <Text className={styles.howToPlayTitle}>How it <span>works</span></Text>
               <Text className={styles.howToPlayDescription}>
@@ -109,7 +146,7 @@ const InovativePlatform = () => {
     <div className={styles.inovativePlatform}>
       <Container size="xl" className={styles.inovativePlatformContainer}>
         <Grid align="flex-end">
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, md: 6 }} order={{ base: 2, md: 1 }}>
             <div className={styles.inovativePlatformContent}>
               <Text className={styles.inovativePlatformTitle}>XSTREAM</Text>
               <Text className={styles.inovativePlatformSubTitle}>INOVATIVE PLATFORM</Text>
@@ -120,7 +157,7 @@ const InovativePlatform = () => {
               <Text className={styles.inovativePlatformDescription}>Keuntungan yang dihasilkan dari bisnis nyata ini dialokasikan secara strategis: sebagian untuk menopang likuiditas token di pasar, sebagian untuk memberikan insentif kepada pengguna, dan sebagian lagi untuk mendukung riset serta pengembangan demi mewujudkan tujuan yang lebih besar di masa depan.</Text>
             </div>
           </Grid.Col>
-          <Grid.Col span={6}>
+          <Grid.Col span={{ base: 12, md: 6 }} order={{ base: 1, md: 2 }}>
             <div className={styles.inovativePlatformImageContainer}>
               <Image src="/images/banner/vision.png" alt="How to Play" className={styles.inovativePlatformImage} />
             </div>
@@ -178,36 +215,42 @@ const Tokenomics = () => {
   return (
     <div className={styles.tokenomics}>
       <Container size="xl" className={styles.tokenomicsContainer}>
-        <Grid align="flex-end">
-          <Grid.Col span={6}>
-            <Box className={styles.tokenomicsContent}>
-              <SimpleGrid cols={2} verticalSpacing={rem(5)} spacing={rem(5)}>
-                {tokenomics.map((item, index) => (
-                  <div key={index} className={styles.tokenomicsItem}>
-                    <Text className={styles.tokenomicsTitle}>{item.title}</Text>
-                    <Text className={styles.tokenomicsDescription}>{item.description}</Text>
-                  </div>
-                ))}
-              </SimpleGrid>
-            </Box>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <Box className={styles.tokenomicsImageContainer}>
-              <div className={styles.tokenomicsChartContainer}>
-                <PieChart
-                  size={300}
-                  data={data}
-                  withLabelsLine
-                  labelsPosition="outside"
-                  labelsType="percent"
-                  withLabels
-                  withTooltip
-                  strokeWidth={2}
-                />
+
+
+        <Box className={styles.tokenomicsImageContainer}>
+          <div className={styles.tokenomicsChartContainer}>
+            <PieChart
+              data={data}
+              withLabelsLine
+              labelsPosition="outside"
+              labelsType="percent"
+              withLabels
+              withTooltip
+              strokeWidth={2}
+            />
+          </div>
+        </Box>
+        <Box className={styles.tokenomicsContent}>
+          <SimpleGrid cols={{ base: 2, md: 3, lg: 6 }} verticalSpacing={rem(5)} spacing={rem(5)}>
+            {tokenomics.map((item, index) => (
+              <div key={index} className={styles.tokenomicsItem}>
+                <Text className={styles.tokenomicsTitle}>{item.title}</Text>
+                <Text className={styles.tokenomicsDescription}>{item.description}</Text>
               </div>
-            </Box>
-          </Grid.Col>
-        </Grid>
+            ))}
+          </SimpleGrid>
+        </Box>
+
+      </Container>
+    </div>
+  )
+}
+
+const Roadmap = () => {
+  return (
+    <div className={styles.roadmap}>
+      <Container size="xl" className={styles.roadmapContainer}>
+        <Text className={styles.roadmapTitle}>Roadmap</Text>
       </Container>
     </div>
   )
