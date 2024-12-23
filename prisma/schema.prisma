@@ -70,6 +70,7 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+    @@map("verificationtoken")
 }
 
 model Wallet {
@@ -83,6 +84,8 @@ model Wallet {
     xtrBalance String
     pendingTransfer String?
     swaps         Swap[]
+
+    @@map("wallet")
 }
 
 enum Status {
